@@ -2,7 +2,9 @@ package pq;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Scanner;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class BBDD {
@@ -10,20 +12,26 @@ public class BBDD {
 	private Connection conexion;
 	private Statement st;
 	private ResultSet rs;
-	private String bd = "adat_a_1_2_bbdd";
-	private String login = "root";
-	private String pwd = "root";
-	private String url = "jdbc:mysql://localhost/" + bd;
+//	private String bd;
+//	private String login;
+//	private String pwd;
+//	private String url;
 	Scanner scan = new Scanner(System.in);
+	Properties propiedades = new Properties();
+	InputStream entrada = null;
 
 	public BBDD() {
 
 		try {
-
+			
+ 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conexion = DriverManager.getConnection(url, login, pwd);
+			 entrada = new FileInputStream("configuracion.properties");
+			 propiedades.load(entrada);
+			conexion = DriverManager.getConnection(propiedades.getProperty("url")+propiedades.getProperty("bd"), propiedades.getProperty("login"), propiedades.getProperty("pwd"));
+//			conexion = DriverManager.getConnection(url, login, pwd);
 			System.out.println("Conectado con éxito.");
-
+			entrada.close();
 		} catch (Exception ex) {
 			System.out.println("Error: " + ex);
 		}
