@@ -1,0 +1,75 @@
+package pq;
+
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.io.InputStream;
+
+public class BBDD {
+
+	private Connection conexion;
+	private Statement st;
+	private ResultSet rs;
+	private String bd = "adat_a_1_2_bbdd";
+	private String login = "root";
+	private String pwd = "root";
+	private String url = "jdbc:mysql://localhost/" + bd;
+	Scanner scan = new Scanner(System.in);
+
+	public BBDD() {
+
+		try {
+
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conexion = DriverManager.getConnection(url, login, pwd);
+			System.out.println("Conectado con éxito.");
+
+		} catch (Exception ex) {
+			System.out.println("Error: " + ex);
+		}
+
+	}
+
+	public HashMap<String, String> Consulta() {
+		HashMap<String, String> pelis = new HashMap<String, String>();
+		try {
+			String query = "SELECT * FROM adat_a_1_2_bbdd.peliculas;";
+			st = conexion.createStatement();
+			rs = st.executeQuery(query);
+
+			while (rs.next()) {
+
+				pelis.put(rs.getString("titulo"), rs.getString("director"));
+			}
+
+			rs.close();
+			st.close();
+		} catch (SQLException s) {
+			s.printStackTrace();
+		}
+
+		return pelis;
+	}
+
+	public void insertarDatos(HashMap<String, String> pelis) {
+
+		String titulo, director;
+
+		for (HashMap.Entry<String, String> entry : pelis.entrySet()) {
+			titulo = entry.getKey();
+			director = entry.getValue();
+
+			String query = "INSERT INTO peliculas (titulo, director) VALUES ('" + titulo + "', '" + director + "');";
+
+			try {
+				PreparedStatement ps = conexion.prepareStatement(query);
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
+}
