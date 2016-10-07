@@ -28,7 +28,7 @@ public class BBDD {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			 entrada = new FileInputStream("configuracion.properties");
 			 propiedades.load(entrada);
-			conexion = DriverManager.getConnection(propiedades.getProperty("url")+propiedades.getProperty("bd"), propiedades.getProperty("login"), propiedades.getProperty("pwd"));
+			conexion = DriverManager.getConnection(propiedades.getProperty("url"), propiedades.getProperty("login"), "");
 //			conexion = DriverManager.getConnection(url, login, pwd);
 			System.out.println("Conectado con éxito.");
 			entrada.close();

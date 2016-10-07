@@ -2,6 +2,7 @@ package pq;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class Ficheros {
 	
@@ -10,16 +11,29 @@ public class Ficheros {
 	BufferedReader br = null;
 	FileWriter archivo = null;
 	PrintWriter pw = null;
-	String ruta = "C:/workspace/ADAT_A_1_2_BBDD/src/pq/datos.txt";
+	Properties propiedades = new Properties();
+	InputStream entrada = null;
+	
 
 	public HashMap<String, String> escribirFichero(HashMap<String,String> mapa) {
 
-		
+		try {
+			entrada = new FileInputStream("configFichero.properties");
+		} catch (FileNotFoundException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		 try {
+			propiedades.load(entrada);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		String titulo;
 		String director;
 
 		try {
-			archivo = new FileWriter(ruta);
+			archivo = new FileWriter(propiedades.getProperty("ruta"));
 			pw = new PrintWriter(archivo);
 			
 			for (HashMap.Entry<String, String> entry : mapa.entrySet()) {
@@ -51,7 +65,9 @@ public class Ficheros {
 		
 		
 		try {
-			fichero = new File(ruta);
+			entrada = new FileInputStream("configFichero.properties");
+			propiedades.load(entrada);
+			fichero = new File(propiedades.getProperty("ruta"));
 			fr = new FileReader(fichero);
 			br = new BufferedReader(fr);
 			
